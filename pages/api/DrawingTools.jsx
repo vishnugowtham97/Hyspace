@@ -1,53 +1,39 @@
+// components/DrawingTools.js
 
-import React, { useState, useEffect } from "react";
-import mapboxgl from "mapbox-gl";
+import React, { useEffect, useCallback } from "react";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 
 const DrawingTools = ({ map, onDrawnFeaturesChange }) => {
-  const [draw, setDraw] = useState(null);
-
   useEffect(() => {
-    if (map) {
-      const drawInstance = new MapboxDraw({
-        displayControlsDefault: false,
-        controls: {
-          point: true,
-          line_string: true,
-          polygon: true,
-          trash: true,
-        },
-      });
-      map.addControl(drawInstance);
+    if (!map) return;
 
-      setDraw(drawInstance);
+    const draw = new MapboxDraw({
+      displayControlsDefault: false,
+      controls: {
+        polygon: true,
+        trash: true,
+      },
+    });
 
-      return () => {
-        map.removeControl(drawInstance);
-      };
-    }
-  }, [map]);
+    map.addControl(draw);
 
-  useEffect(() => {
-    if (draw) {
-      draw.on("draw.create", updateFeatures);
-      draw.on("draw.delete", updateFeatures);
-      draw.on("draw.update", updateFeatures);
-    }
+    const updateFeatures = () => {
+      const data = draw.getAll();
+      onDrawnFeaturesChange(data);
+    };
+
+    map.on("draw.create", updateFeatures);
+    map.on("draw.update", updateFeatures);
+    map.on("draw.delete", updateFeatures);
 
     return () => {
-      if (draw) {
-        draw.off("draw.create", updateFeatures);
-        draw.off("draw.delete", updateFeatures);
-        draw.off("draw.update", updateFeatures);
-      }
+      map.off("draw.create", updateFeatures);
+      map.off("draw.update", updateFeatures);
+      map.off("draw.delete", updateFeatures);
+      map.removeControl(draw);
     };
-  }, [draw]);
-
-  const updateFeatures = () => {
-    const drawnFeatures = draw.getAll();
-    onDrawnFeaturesChange(drawnFeatures);
-  };
+  }, [map, onDrawnFeaturesChange]);
 
   return null;
 };

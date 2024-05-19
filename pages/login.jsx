@@ -1,50 +1,47 @@
-// pages/login.js
+// pages/login.jsx
 
-import { useState } from "react";
-import Link from "next/link";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
+import "../styles/Home.module.css";
 
 const Login = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Perform login logic here
-    // For demonstration purposes, let's assume the login is successful
-    console.log("Login successful");
-    router.push("/"); // Redirect to the homepage after login
+
+    // Add your login logic here
+
+    // Redirect to the homepage after login
+    router.push("/");
   };
 
   return (
     <div className="container">
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         <button type="submit">Login</button>
       </form>
       <p>
-        Don't have an account? <Link href="/signup">Sign up</Link>
+        Don't have an account? <a href="/signup">Sign up</a>
       </p>
     </div>
   );
