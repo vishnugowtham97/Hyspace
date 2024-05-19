@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import "../styles/Home.module.css";
+import Link from "next/link";
 
 const Login = () => {
   const router = useRouter();
@@ -41,7 +42,7 @@ const Login = () => {
         <button type="submit">Login</button>
       </form>
       <p>
-        Don't have an account? <a href="/signup">Sign up</a>
+        Don't have an account? <Link href="/signup">Sign up</Link>
       </p>
     </div>
   );
